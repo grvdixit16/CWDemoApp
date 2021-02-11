@@ -1,7 +1,30 @@
+
+// Register Action Types
 export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
 export const REGISTER_FAIL = "REGISTER_FAIL";
+export const REGISTER_REQUEST = "REGISTER_REQUEST";
+
+// Login Action Types
+export const LOGIN_REQUEST = "LOGIN_REQUEST";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAIL = "LOGIN_FAIL";
+
+
+// User Action Types
+export const GETALLUSERS_REQUEST = "GETALLUSERS_REQUEST";
+export const GETALLUSERS_SUCCESS = "GETALLUSERS_SUCCESS";
+export const GETALLUSERS_FAILURE = "GETALLUSERS_FAILURE";
+
+export const DELETEUSER_REQUEST = "DELETEUSER_REQUEST";
+export const DELETEUSER_SUCCESS = "DELETEUSER_SUCCESS";
+export const DELETEUSER_FAILURE = "DELETEUSER_FAILURE";
+
+
 export const LOGOUT = "LOGOUT";
-export const SET_MESSAGE = "SET_MESSAGE";
-export const CLEAR_MESSAGE = "CLEAR_MESSAGE";
+
+
+export const alertNotification = {
+    SUCCESS: 'ALERT_SUCCESS',
+    ERROR: 'ALERT_ERROR',
+    CLEAR: 'ALERT_CLEAR'
+};

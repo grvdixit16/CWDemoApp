@@ -1,86 +1,92 @@
-import {
-    REGISTER_SUCCESS,
-    REGISTER_FAIL,
-    LOGIN_SUCCESS,
-    LOGIN_FAIL,
-    LOGOUT,
-    SET_MESSAGE,
-  } from "./ActionTypes";
-  
-  import AuthService from "../services/auth.service";
-  
-  export const register = (username, email, password) => (dispatch) => {
-    return AuthService.register(username, email, password).then(
-      (response) => {
-        dispatch({
-          type: REGISTER_SUCCESS,
-        });
-  
-        dispatch({
-          type: SET_MESSAGE,
-          payload: response.data.message,
-        });
-  
-        return Promise.resolve();
-      },
-      (error) => {
-        const message =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-  
-        dispatch({
-          type: REGISTER_FAIL,
-        });
-  
-        dispatch({
-          type: SET_MESSAGE,
-          payload: message,
-        });
-  
-        return Promise.reject();
-      }
-    );
-  };
-  
-  export const login = (username, password) => (dispatch) => {
-    return AuthService.login(username, password).then(
-      (data) => {
-        dispatch({
-          type: LOGIN_SUCCESS,
-          payload: { user: data },
-        });
-  
-        return Promise.resolve();
-      },
-      (error) => {
-        const message =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-  
-        dispatch({
-          type: LOGIN_FAIL,
-        });
-  
-        dispatch({
-          type: SET_MESSAGE,
-          payload: message,
-        });
-  
-        return Promise.reject();
-      }
-    );
-  };
-  
-  export const logout = () => (dispatch) => {
+import { useActionTypes } from "./UserActionTypes";
+  import {AuthService} from "../services/AuthService";
+import { alertActions } from './notifyAction';
+import { history } from '../shared/helper/history';
+
+export const userActions = {
+    login,
+    logout,
+    register,
+    getAll,
+    delete: _delete
+};
+
+function login(username, password) {
+    return dispatch => {
+        dispatch(request({ username }));
+        AuthService.login(username, password)
+            .then(
+                user => { 
+                    dispatch(success(user));
+                    history.push('/');
+                },
+                error => {
+                    dispatch(failure(error.toString()));
+                    dispatch(alertActions.error(error.toString()));
+                }
+            );
+    };
+
+    function request(user) { return { type: useActionTypes.LOGIN_REQUEST, user } }
+    function success(user) { return { type: useActionTypes.LOGIN_SUCCESS, user } }
+    function failure(error) { return { type: useActionTypes.LOGIN_FAILURE, error } }
+}
+
+function logout() {
     AuthService.logout();
-  
-    dispatch({
-      type: LOGOUT,
-    });
-  };
+    return { type: useActionTypes.LOGOUT };
+}
+
+function register(user) {
+    return dispatch => {
+        dispatch(request(user));
+
+        AuthService.register(user)
+            .then(
+                user => { 
+                    dispatch(success());
+                    history.push('/login');
+                    dispatch(alertActions.success('Registration successful'));
+                },
+                error => {
+                    dispatch(failure(error.toString()));
+                    dispatch(alertActions.error(error.toString()));
+                }
+            );
+    };
+
+    function request(user) { return { type: useActionTypes.REGISTER_REQUEST, user } }
+    function success(user) { return { type: useActionTypes.REGISTER_SUCCESS, user } }
+    function failure(error) { return { type: useActionTypes.REGISTER_FAIL, error } }
+}
+
+function getAll() {
+    return dispatch => {
+        dispatch(request());
+
+        AuthService.getAllUser()
+            .then(
+                users => dispatch(success(users)),
+                error => dispatch(failure(error.toString()))
+            );
+    };
+
+    function request() { return { type: useActionTypes.GETALL_REQUEST } }
+    function success(users) { return { type: useActionTypes.GETALL_SUCCESS, users } }
+    function failure(error) { return { type: useActionTypes.GETALL_FAILURE, error } }
+}
+ 
+function _delete(id) {
+    return dispatch => {
+        dispatch(request(id));
+        AuthService.deleteUser(id)
+            .then(
+                user => dispatch(success(id)),
+                error => dispatch(failure(id, error.toString()))
+            );
+    };
+
+    function request(id) { return { type: useActionTypes.DELETE_REQUEST, id } }
+    function success(id) { return { type: useActionTypes.DELETE_SUCCESS, id } }
+    function failure(id, error) { return { type: useActionTypes.DELETE_FAILURE, id, error } }
+}

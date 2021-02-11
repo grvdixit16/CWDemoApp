@@ -1,6 +1,15 @@
- import { applyMiddleware, createStore } from 'redux';
- import employeeReducer from '../reducers/employee';
- import thunk from "redux-thunk";
+import { createStore, applyMiddleware } from 'redux';
+import thunkMiddleware from 'redux-thunk';
+import { createLogger } from 'redux-logger';
 
- export const store = createStore(
-     employeeReducer, applyMiddleware(thunk));
+import rootReducer from '../reducers/index';
+
+const loggerMiddleware = createLogger();
+
+export const store = createStore(
+    rootReducer,
+    applyMiddleware(
+        thunkMiddleware,
+        loggerMiddleware
+    )
+);

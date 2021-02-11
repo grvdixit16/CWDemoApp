@@ -212,7 +212,7 @@ render() {
 
 
 const mapStateToProps = state => ({
-  employees: state.employees
+  employees: state.employeeReducer.employees
 });
 
 export default connect(mapStateToProps, { getEmployee, addEmployee, editEmployee, deleteEmployee })(EmployeePage);
