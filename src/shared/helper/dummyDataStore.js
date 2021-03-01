@@ -86,6 +86,21 @@ export function configureDummyData() {
 
                     return;
                 }
+
+
+                // GET EMPLOYEE RECORDS
+
+                 // get users
+                 if (url.endsWith('/employees') && opts.method === 'GET') {
+                    if (opts.headers && opts.headers.Authorization === 'Bearer dummy-token') {
+                        resolve({ ok: true, text: () => Promise.resolve(JSON.stringify(users))});
+                    } else {
+                        reject('Unauthorised');
+                    }
+
+                    return;
+                }
+
                 realFetch(url, opts).then(response => resolve(response));
             }, 500);
         });

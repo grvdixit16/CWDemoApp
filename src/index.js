@@ -15,10 +15,9 @@ configureDummyData();
 
 render(
     <Provider store={store}>
-       {/* <BrowserRouter>
+       <BrowserRouter>
        <App />
-       </BrowserRouter> */}
-         <App />
+       </BrowserRouter>
     </Provider>,
     document.getElementById("root")
   );

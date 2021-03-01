@@ -1,11 +1,6 @@
 import React from "react";
-import {Router, Route, Switch,Redirect } from 'react-router-dom';
-import {HomePage} from "./component/home";
+import HomePageContainer from "./ContainerV2/HomePageContainer";
 import logo from "./assets/images/logo.png"; // with import
-import { RegisterPage } from "./component/auth/Register";
-import { LoginPage } from "./component/auth/Login/";
-import {  PrivateRoute } from './component/route/SecureRoutes';
-import { history } from './shared/helper/history';
 import { connect } from 'react-redux';
 
 
@@ -29,14 +24,7 @@ class App extends React.Component {
                                     </li>
                             </ul>        
                         </nav>
-                        <Router history={history}>
-                        <Switch>
-                              <PrivateRoute exact path="/" component={HomePage} />
-                              <Route path="/login" component={LoginPage} />
-                              <Route path="/register" component={RegisterPage} />
-                              <Redirect from="*" to="/" />
-                            </Switch>
-                        </Router>
+                        <HomePageContainer></HomePageContainer>
                     </div>
                 </div>
             </div>
